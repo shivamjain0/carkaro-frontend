@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, HostListener } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
 @Component({
@@ -10,7 +10,14 @@ import { RouterLink } from '@angular/router';
 })
 export class HomePageComponent {
   isMenuOpen: boolean = false;
+
   toggleMenu() {
     this.isMenuOpen = !this.isMenuOpen;
   }
+
+  // This listens to the click event anywhere on the component
+  @HostListener('document:click', ['$event'])
+  onClickOutside(event: Event) {
+    this.isMenuOpen = false;
+  } 
 }

@@ -57,11 +57,15 @@ export class SearchComponent implements OnInit, OnDestroy {
       })
     ).subscribe((res) => {
       const searchNotFound = ['We could not find that place.'];
-      this.locationIqServcie.getLocationDetails(res[0].lat, res[0].lon)
-      .subscribe((res: any) => {
-        console.log("state :", res.address.state);
-        console.log("country :", res.address.country);
-      })
+      if(res.length) {
+        this.locationIqServcie.getLocationDetails(res[0].lat, res[0].lon)
+        .subscribe((res: any) => {
+          console.log("address :", res.address);
+          console.log("city :", res.address.city);
+          console.log("state :", res.address.state);
+          console.log("country :", res.address.country);
+        })
+      }
       const result = res.slice(0,5).map((val: any) => val.display_name);
       if(this.isLeavingFromDropDownOpen){
         if(result.length) {

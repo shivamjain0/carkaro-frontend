@@ -40,14 +40,12 @@
 
 <body>
   <div class="container">
-    <!-- Navbar for switching between Login and Sign Up -->
     <div class="nav-tabs">
-      <button [class.active]="isLogin" (click)="isLogin = true">Login</button>
-      <button [class.active]="!isLogin" (click)="isLogin = false">Sign Up</button>
+      <button [class.active]="isLogin" (click)="isLogin = true; this.errMsg = {}">Login</button>
+      <button [class.active]="!isLogin" (click)="isLogin = false; this.errMsg = {}">Sign Up</button>
     </div>
 
     <div class="form-container">
-      <!-- Login Form -->
       <h2 *ngIf="isLogin">Login</h2>
       <h2 *ngIf="!isLogin">Sign Up</h2>
 
@@ -76,8 +74,8 @@
         <div class="form-group">
           <label for="email">Email</label>
           <input type="email" id="email" formControlName="email" placeholder="Enter your email" required (blur)="updateErrMsg('email')">
-          @if (errMsg) {
-           <small class="danger">Please enter a valid email address</small>
+          @if (errMsg['email']) {
+           <small class="danger">{{errMsg['email']}}</small>
           }
           <!-- @if ((isLogin ? loginData.controls['email'] : signupData.controls['email']).touched) {
             @if ((isLogin ? loginData.controls['email'] : signupData.controls['email']).errors?.['required']) {
@@ -91,10 +89,9 @@
 
         <div class="form-group">
           <label for="password">Password</label>
-          <input type="password" id="password" formControlName="password" placeholder="Enter your password" required>
-          @if ((isLogin ? loginData.controls['password'] : signupData.controls['password']).touched &&
-              (isLogin ? loginData.controls['password'] : signupData.controls['password']).invalid) {
-            <small class="danger">Password is required</small>
+          <input type="password" id="password" formControlName="password" placeholder="Enter your password" required (blur)="updateErrMsg('password')">
+          @if (errMsg['password']) {
+           <small class="danger">{{errMsg['password']}}</small>
           }
         </div>
 

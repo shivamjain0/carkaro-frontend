@@ -13,7 +13,7 @@ import { UserService } from '../../services/user/user.service';
 })
 export class LoginPageComponent implements OnInit {
   isLogin = true;
-  errMsg: string = '';
+  errMsg: {[key: string]: string} = {}; // or errMsg: Record<string,string> = {}
   signupData: FormGroup = new FormGroup({
     name: new FormControl('', { 
       validators: Validators.required, 
@@ -92,15 +92,15 @@ export class LoginPageComponent implements OnInit {
 
   getErrMsg(field: string) {
     const control = 
-      this.isLogin ? this.loginData.controls[field] : this.signupData.controls['email'];
-    if(control.errors) {
-      if (control.errors['required']) return 'This field is required';
+      this.isLogin ? this.loginData.controls[field] : this.signupData.controls[field];
+    if(control.touched && control.errors) {
+      if (control.errors['required']) return `Required field`;
       if (control.errors['pattern']) return 'Invalid format';
     }
     return '';
   }
 
   updateErrMsg(field: string) {
-    this.errMsg = this.getErrMsg(field);
+    this.errMsg[field] = this.getErrMsg(field);
   }
 }
