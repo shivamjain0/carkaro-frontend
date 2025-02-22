@@ -1,13 +1,14 @@
 <header class="header">
-    <div class="logo">
-        <a href="/" class="logo-link">
-        <img src="assets/car-karo-logo.png" alt="Car Karo" class="logo-image">
-        </a>
+    <div class="logo" routerLink="/homePage/search">
+        <img src="assets/car-karo-logo.png" alt="Car Karo" class="logo-image"> 
+        <h2>CarKaro</h2>
     </div>
-    <div class="nav">
-        <p routerLink="/homePage/search" class="nav-link">Search</p>
-        <p routerLink="/login" class="nav-link">Publish a ride</p>
-    </div>
+    @if (isLoginUser) {
+        <div class="nav">
+            <p routerLink="/homePage/search" class="nav-link">Search</p>
+            <p routerLink="/login" class="nav-link">Publish a ride</p>
+        </div>
+    }
     <div class="user-actions" (click)="$event.stopPropagation()">
         <button class="menu-toggle" (click)="toggleMenu()">
             <svg class="menu-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
@@ -16,8 +17,14 @@
         </button>
          @if (isMenuOpen) {
             <div class="dropdown-menu" id="dropdownMenu">
-                <button routerLink="/login" class="dropdown-item">Login</button>
-                <button routerLink="/login" class="dropdown-item">Sign Up</button>
+                <button routerLink="/login"             
+                    [queryParams]="{isLogin: true}" 
+                    class="dropdown-item"
+                >Login</button>
+                <button routerLink="/signUp" 
+                    [queryParams]="{isLogin: false}" 
+                    class="dropdown-item"
+                >Sign Up</button>
             </div>
          }
     </div>  

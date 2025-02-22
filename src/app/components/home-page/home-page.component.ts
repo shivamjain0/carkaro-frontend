@@ -1,4 +1,4 @@
-import { Component, HostListener } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
 @Component({
@@ -8,8 +8,13 @@ import { RouterLink } from '@angular/router';
   templateUrl: './home-page.component.html',
   styleUrl: './home-page.component.css'
 })
-export class HomePageComponent {
+export class HomePageComponent implements OnInit {
   isMenuOpen: boolean = false;
+  isLoginUser: boolean = false;
+
+  ngOnInit(): void {
+    this.isLoginUser = Boolean(localStorage.getItem('isLogin'));
+  }
 
   toggleMenu() {
     this.isMenuOpen = !this.isMenuOpen;

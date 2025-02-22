@@ -1,48 +1,19 @@
-<!-- 
-<body>
-  <div class="container">
-    <div class="form-container">
-      <h2>Login</h2>
-      <form [formGroup]="loginData">
-        <div class="form-group">
-          <label for="email">Email</label>
-          <input type="email" id="email" formControlName="email" name="email" placeholder="Enter your email" required>
-          @if (loginData.controls['email'].touched) {
-            @if (loginData.controls['email'].errors?.['required']) {
-              <small class="danger">Email is required</small>
-            } 
-            @else if (loginData.controls['email'].errors?.['pattern']) {
-              <small class="danger">Please enter valid email address</small>
-            }
-          }
-        </div>
-        <div class="form-group">
-          <label for="password">Password</label>
-          <input type="password" id="password" formControlName="password" name="password" placeholder="Enter your password" required>
-          @if (loginData.controls['password'].touched && loginData.controls['password'].invalid) {
-            <small class="danger">Password is required</small>
-          }
-        </div>
-        <button type="submit" (click)="login()" class="btn">Sign In</button>
-        <div class="form-footer">
-          <p>Don't have an account? Sign Up</p>
-        </div>
-        <div class="google-signin">
-            <button type="button" class="google-btn">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Google_%22G%22_Logo.svg/512px-Google_%22G%22_Logo.svg.png" alt="Google Logo">
-                Sign in with Google
-            </button>
-        </div>          
-      </form>
-    </div>
-  </div>
-</body> -->
-
+<app-home-page></app-home-page>
 <body>
   <div class="container">
     <div class="nav-tabs">
-      <button [class.active]="isLogin" (click)="isLogin = true; this.errMsg = {}">Login</button>
-      <button [class.active]="!isLogin" (click)="isLogin = false; this.errMsg = {}">Sign Up</button>
+      <button 
+      [routerLink]="['/login']"
+      [queryParams]="{isLogin: true}"
+      [class.active]="isLogin" 
+      (click)="isLogin = true; this.errMsg = {}"
+      >Login</button>
+      <button 
+      [routerLink]="['/signUp']" 
+      [queryParams]="{isLogin: false}"
+      [class.active]="!isLogin" 
+      (click)="isLogin = false; this.errMsg = {}"
+      >Sign Up</button>
     </div>
 
     <div class="form-container">
@@ -53,22 +24,34 @@
         <div *ngIf="!isLogin">
           <div class="form-group">
             <label for="name">Name</label>
-            <input type="text" id="name" formControlName="name" placeholder="Enter your full name">
+            <input type="text" id="name" formControlName="name" placeholder="Enter your full name" required (blur)="updateErrMsg('name')">
+            @if (errMsg['name']) {
+             <small class="danger">{{errMsg['name']}}</small>
+            }
           </div>
           
           <div class="form-group">
             <label for="age">Age</label>
-            <input type="text" id="age" formControlName="age" placeholder="Enter your age">
+            <input type="text" id="age" formControlName="age" placeholder="Enter your age" required (blur)="updateErrMsg('age')">
+            @if (errMsg['age']) {
+             <small class="danger">{{errMsg['age']}}</small>
+            }
           </div>
 
           <div class="form-group">
             <label for="gender">Gender</label>
-            <input type="text" id="gender" formControlName="gender" placeholder="Enter your gender">
+            <input type="text" id="gender" formControlName="gender" placeholder="Enter your gender" required (blur)="updateErrMsg('gender')">
+            @if (errMsg['gender']) {
+             <small class="danger">{{errMsg['gender']}}</small>
+            }
           </div>
 
           <div class="form-group">
             <label for="contactNo">Phone Number</label>
-            <input type="tel" id="contactNo" formControlName="contactNo" placeholder="Enter your contact number">
+            <input type="tel" id="contactNo" formControlName="contactNo" placeholder="Enter your contact number" required (blur)="updateErrMsg('contactNo')">
+            @if (errMsg['contactNo']) {
+             <small class="danger">{{errMsg['contactNo']}}</small>
+            }
           </div>
         </div>
         <div class="form-group">
@@ -77,14 +60,6 @@
           @if (errMsg['email']) {
            <small class="danger">{{errMsg['email']}}</small>
           }
-          <!-- @if ((isLogin ? loginData.controls['email'] : signupData.controls['email']).touched) {
-            @if ((isLogin ? loginData.controls['email'] : signupData.controls['email']).errors?.['required']) {
-              <small class="danger">Email is required</small>
-            } 
-            @else if ((isLogin ? loginData.controls['email'] : signupData.controls['email']).errors?.['pattern']) {
-              <small class="danger">Please enter a valid email address</small>
-            }
-          } -->
         </div>
 
         <div class="form-group">
@@ -95,15 +70,19 @@
           }
         </div>
 
-        <!-- Additional Fields for Sign Up -->
         <div *ngIf="!isLogin">
           <div class="form-group">
             <label for="confirm-password">Confirm Password</label>
-            <input type="password" id="confirm-password" formControlName="confirmPass" placeholder="Confirm password">
+            <input type="password" id="confirm-password" formControlName="confirmPass" placeholder="Confirm password" required (blur)="updateErrMsg('confirmPass')">
+            @if (errMsg['confirmPass']) {
+             <small class="danger">{{errMsg['confirmPass']}}</small>
+            }
           </div>
         </div>
 
-        <button type="submit" (click)="isLogin ? login() : signup()" class="btn">
+        <button type="submit" 
+        (click)="isLogin ? login() : signup()" class="btn" 
+        [disabled]="isLogin ? loginData.invalid : signupData.invalid">
           {{ isLogin ? 'Sign In' : 'Sign Up' }}
         </button>
 
