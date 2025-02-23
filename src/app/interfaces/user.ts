@@ -2,7 +2,7 @@ export interface createUserDTO {
     name: string;
     age: number;
     gender: string;
-    contact: string;
     email: string;
+    contact: string;
     password: string;
 }

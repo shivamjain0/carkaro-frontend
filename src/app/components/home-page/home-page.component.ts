@@ -25,4 +25,8 @@ export class HomePageComponent implements OnInit {
   onClickOutside(event: Event) {
     this.isMenuOpen = false;
   } 
+
+  logout() {
+    localStorage.removeItem('isLogin');
+  }
 }

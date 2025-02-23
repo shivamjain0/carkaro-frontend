@@ -3,20 +3,19 @@ import { inject, Injectable } from '@angular/core';
 import { createUserDTO } from '../../interfaces/user';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class UserService {
-
   private apiurl: string = 'http://localhost:3000/users';
   private http = inject(HttpClient);
 
-  constructor() { }
+  constructor() {}
 
   login(email: string, password: string) {
-    return this.http.post<boolean>(`${this.apiurl}/login`, {email, password});
+    return this.http.post<boolean>(`${this.apiurl}/login`, { email, password });
   }
 
   createUser(user: createUserDTO) {
-    
+    return this.http.post<any>(`${this.apiurl}`, user);
   }
 }
