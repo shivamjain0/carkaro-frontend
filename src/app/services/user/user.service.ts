@@ -16,6 +16,6 @@ export class UserService {
   }
 
   createUser(user: createUserDTO) {
-    return this.http.post<any>(`${this.apiurl}`, user);
+    return this.http.post<any>(`${this.apiurl}`, user) ;
   }
 }
