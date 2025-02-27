@@ -1,69 +1,102 @@
 <app-home-page></app-home-page>
 <body>
-    <div class="booking-form-container">
-        <h2>Book a Ride</h2>
-        <form class="booking-form" [formGroup]="searchRide">
-            <div class="form-group">
-                <label for="from">Leaving From:</label>
-                <div class="search-container leavingFromDropDown"> 
-                    <input type="text" formControlName="leavingFrom" id="from" name="from" 
-                        (input)="onSearchLeavingFrom($event)"     
-                        (focus)="isLeavingFromDropDownOpen = true" 
-                        value="{{leavingFrom}}"
-                        required
-                    >
-                    @if (leavingFromData.length && isLeavingFromDropDownOpen) {
-                    <div class="dropdown">
-                        @for (data of leavingFromData; track $index) {
-                        <!-- (mouseover)="selectFrom(data)" -->
-                        <div class="dropdown-item"
-                        (click)="selectLeavingFromVal(data)">
-                            {{data}}
-                        </div>
-                        }
-                    </div>
-                    }
-                  </div>                  
+  <div class="booking-form-container">
+    <h2>Book a Ride</h2>
+    <form class="booking-form" [formGroup]="searchRide">
+      <div class="form-group">
+        <label for="from">Leaving From:</label>
+        <div class="search-container leavingFromDropDown">
+          <input
+            type="text"
+            formControlName="leavingFrom"
+            id="from"
+            name="from"
+            (input)="onSearchLeavingFrom($event)"
+            (change)="onSearchLeavingFrom($event)"
+            (focus)="showDropDown('leavingFrom')"
+            [value]="searchRide.get('leavingFrom')?.value?.place || ''"
+            required
+          />
+          @if (leavingFromData.length && isLeavingFromDropDownOpen) {
+          <div class="dropdown">
+            @for (data of leavingFromData; track $index) {
+            <div class="dropdown-item" (click)="selectLeavingFromVal(data)">
+              {{ data.place }} 
             </div>
+            }
+          </div>
+          }
+        </div>
+      </div>
 
-            <div class="form-group">
-                <label for="to">Going To:</label>
-                <div class="search-container goingToDropDown">
-                    <input type="text" formControlName="goingTo" id="to" name="to" 
-                    (input)="onSearchGoingTo($event)"
-                    (focus)="isGoingToDropDownOpen = true" 
-                    value="{{goingTo}}"
-                    required
-                    >
-                    @if (goingToData.length && isGoingToDropDownOpen) {
-                        <div class="dropdown">
-                            @for (data of goingToData; track $index) {
-                            <!-- (mouseover)="selectFrom(data)" -->
-                            <div class="dropdown-item"
-                            (click)="selectGoingToVal(data)">
-                                {{data}}
-                            </div>
-                            }
-                        </div>
-                    }
-                </div> 
+      <div class="form-group">
+        <label for="to">Going To:</label>
+        <div class="search-container goingToDropDown">
+          <input
+            type="text"
+            formControlName="goingTo"
+            id="to"
+            name="to"
+            (input)="onSearchGoingTo($event)"
+            (focus)="showDropDown('goingTo')"
+            [value]="searchRide.get('goingTo')?.value?.place|| ''"
+            required
+          />
+          @if (goingToData.length && isGoingToDropDownOpen) {
+          <div class="dropdown">
+            @for (data of goingToData; track $index) {
+            <div class="dropdown-item" (click)="selectGoingToVal(data)">
+              {{ data.place }}
             </div>
+            }
+          </div>
+          }
+        </div>
+      </div>
 
-            <div class="form-group">
-                <label for="date">Date:</label>
-                <input type="date" formControlName="date" id="date" name="date" min="{{today}}" [value]="today" #dateInput (click)="openCalender()">
-            </div>
+      <div class="form-group">
+        <label for="date">Date:</label>
+        <input
+          type="date"
+          formControlName="date"
+          id="date"
+          name="date"
+          min="{{ today }}"
+          [value]="today"
+          #dateInput
+          (click)="openCalender()"
+        />
+      </div>
 
-            <div class="form-group">
-                <label for="passengers">Number of Passengers:</label>
-                <div class="passenger-controls">
-                    <button type="button" id="decrease-passenger" (click)="decPrsnCnt()">-</button>
-                    <input type="number" id="passenger-count" formControlName="prsnCount" name="passengers" min="1" required readonly>
-                    <button type="button" id="increase-passenger" (click)="incPrsnCnt()">+</button>
-                </div>
-            </div>
+      <div class="form-group">
+        <label for="passengers">Number of Passengers:</label>
+        <div class="passenger-controls">
+          <button type="button" id="decrease-passenger" (click)="decPrsnCnt()">
+            -
+          </button>
+          <input
+            type="number"
+            id="passenger-count"
+            formControlName="prsnCount"
+            name="passengers"
+            min="1"
+            required
+            readonly
+          />
+          <button type="button" id="increase-passenger" (click)="incPrsnCnt()">
+            +
+          </button>
+        </div>
+      </div>
 
-            <button type="submit" class="search-btn">Search</button>
-        </form>
-    </div>
+      <button
+        type="submit"
+        class="search-btn"
+        [disabled]="searchRide.invalid"
+        (click)="getRides()"
+      >
+        Search
+      </button>
+    </form>
+  </div>
 </body>

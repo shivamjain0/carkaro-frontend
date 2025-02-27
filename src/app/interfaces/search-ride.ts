@@ -1,6 +1,14 @@
+export interface SearchData {
+  place: string;
+  state?: string;
+  state_district?: string;
+  lat?: string;
+  lon?: string;
+  // country?: string
+}
 export interface SearchRide {
-    leavingFrom: string,
-    goingTo: string,
-    date: string,
-    prsnCount: number
+  leavingFrom: SearchData;
+  goingTo: SearchData;
+  date: string;
+  prsnCount: number;
 }
