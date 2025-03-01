@@ -37,7 +37,7 @@ export class LoginPageComponent implements OnInit {
     private route: Router,
     private activatedRoute: ActivatedRoute,
     private userService: UserService
-  ) {}
+  ) { }
 
   initializeForms() {
     this.signupData = new FormGroup(

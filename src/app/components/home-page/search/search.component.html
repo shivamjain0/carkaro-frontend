@@ -11,17 +11,18 @@
             formControlName="leavingFrom"
             id="from"
             name="from"
+            #from
             (input)="onSearchLeavingFrom($event)"
             (change)="onSearchLeavingFrom($event)"
             (focus)="showDropDown('leavingFrom')"
             [value]="searchRide.get('leavingFrom')?.value?.place || ''"
             required
           />
-          @if (leavingFromData.length && isLeavingFromDropDownOpen) {
+          @if (isLeavingFromDropDownOpen && leavingFromData.length ) {
           <div class="dropdown">
             @for (data of leavingFromData; track $index) {
             <div class="dropdown-item" (click)="selectLeavingFromVal(data)">
-              {{ data.place }} 
+              {{ data.place }}
             </div>
             }
           </div>
@@ -37,12 +38,15 @@
             formControlName="goingTo"
             id="to"
             name="to"
+            #to 
+            tabindex="0"
             (input)="onSearchGoingTo($event)"
+            (change)="onSearchGoingTo($event)"
             (focus)="showDropDown('goingTo')"
-            [value]="searchRide.get('goingTo')?.value?.place|| ''"
+            [value]="searchRide.get('goingTo')?.value?.place || ''"
             required
           />
-          @if (goingToData.length && isGoingToDropDownOpen) {
+          @if (isGoingToDropDownOpen && goingToData.length) {
           <div class="dropdown">
             @for (data of goingToData; track $index) {
             <div class="dropdown-item" (click)="selectGoingToVal(data)">

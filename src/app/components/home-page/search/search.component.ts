@@ -1,9 +1,12 @@
 import {
+  AfterViewInit,
   Component,
+  ElementRef,
   HostListener,
   inject,
   OnDestroy,
   OnInit,
+  viewChild,
   ViewChild,
 } from '@angular/core';
 import { HomePageComponent } from '../home-page.component';
@@ -12,6 +15,7 @@ import { SearchData, SearchRide } from '../../../interfaces/search-ride';
 import { BehaviorSubject, catchError, debounceTime, of } from 'rxjs';
 import { HttpErrorResponse } from '@angular/common/http';
 import { LocationIQService } from '../../../services/locationIQ/location-iq.service';
+import { RideService } from '../../../services/rides/ride.service';
 
 @Component({
   selector: 'app-search',
@@ -20,7 +24,7 @@ import { LocationIQService } from '../../../services/locationIQ/location-iq.serv
   templateUrl: './search.component.html',
   styleUrl: './search.component.css',
 })
-export class SearchComponent implements OnInit, OnDestroy {
+export class SearchComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild('dateInput') dateInput: any;
   today: string = new Date().toISOString().split('T')[0];
   rideDetails: SearchRide | null = null;
@@ -33,6 +37,18 @@ export class SearchComponent implements OnInit, OnDestroy {
   goingTo: string = '';
   locationIqServcie = inject(LocationIQService);
   searchInput = new BehaviorSubject<string>('');
+  @ViewChild('from') fromRef?: ElementRef;
+  @ViewChild('to') toRef?: ElementRef;
+
+  constructor(private rideService: RideService) {
+    // this.rideDetails = this.searchRide.value as SearchRide;
+  }
+
+  ngAfterViewInit(): void {
+    if (this.fromRef) {
+      this.fromRef.nativeElement.focus();
+    }
+  }
 
   ngOnInit(): void {
     this.searchRide = new FormGroup({
@@ -66,9 +82,11 @@ export class SearchComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe((res) => {
-        const searchNotFound: SearchData = {
-          place: 'We could not find that place.',
-        };
+        const searchNotFound: SearchData[] = [
+          {
+            place: 'We could not find that place.',
+          },
+        ];
         // if (res.length) {
         //   this.locationIqServcie
         //     .getLocationDetails(res[0].lat, res[0].lon)
@@ -83,8 +101,6 @@ export class SearchComponent implements OnInit, OnDestroy {
         const result: SearchData[] = res.slice(0, 5).map((val: any) => {
           return {
             place: val.display_name,
-            // state: val.address?.state,
-            // state_district: val.address?.state_district,
             lat: val.lat,
             lon: val.lon,
           };
@@ -93,50 +109,46 @@ export class SearchComponent implements OnInit, OnDestroy {
           if (result.length) {
             this.leavingFromData = result;
           } else {
-            this.leavingFromData = [];
-            this.leavingFromData.push(searchNotFound);
+            this.leavingFromData = searchNotFound;
           }
         } else if (this.isGoingToDropDownOpen) {
           if (result.length) {
             this.goingToData = result;
           } else {
-            this.goingToData = [];
-            this.goingToData.push(searchNotFound);
+            this.goingToData = searchNotFound;
           }
         }
-
-        console.log('result :', result);
       });
   }
 
   @HostListener('document:click', ['$event'])
   onClickOutside(event: Event) {
     const target = event.target as HTMLElement;
-    if (!target.closest('.leavingFromDropDown')) {
-      this.isLeavingFromDropDownOpen = false;
-      // this.leavingFromData = [];
-    }
-    if (!target.closest('.goingToDropDown')) {
-      this.isGoingToDropDownOpen = false;
-      // this.goingToData = [];
+    if (!target.closest('.search-btn')) {
+      if (!target.closest('.leavingFromDropDown')) {
+        this.isLeavingFromDropDownOpen = false;
+      }
+      if (!target.closest('.goingToDropDown')) {
+        this.isGoingToDropDownOpen = false;
+      }
     }
   }
 
   selectLeavingFromVal(val: SearchData) {
-    this.getLocationAddress(val);
+    this.getLocationData(val);
     this.searchRide.get('leavingFrom')?.setValue(val);
     this.leavingFrom = val.place;
     this.isLeavingFromDropDownOpen = false;
   }
 
   selectGoingToVal(val: SearchData) {
-    this.getLocationAddress(val);
+    this.getLocationData(val);
     this.searchRide.get('goingTo')?.setValue(val);
     this.goingTo = val.place;
     this.isGoingToDropDownOpen = false;
   }
 
-  getLocationAddress(address: SearchData) {
+  getLocationData(address: SearchData) {
     this.locationIqServcie
       .getLocationDetails(Number(address.lat), Number(address.lon))
       .subscribe((res: any) => {
@@ -144,8 +156,9 @@ export class SearchComponent implements OnInit, OnDestroy {
         console.log('address :', res.address);
         console.log('city :', res.address.city);
         console.log('state :', res.address.state);
-        console.log('country :', res.address.country);
+        console.log('state_district :', res.address.state_district);
 
+        address.city = res.address?.city;
         address.state = res.address?.state;
         address.state_district = res.address?.state_district;
       });
@@ -161,10 +174,6 @@ export class SearchComponent implements OnInit, OnDestroy {
     const searchText = event.target.value;
     if (searchText) this.isGoingToDropDownOpen = true;
     this.searchInput.next(searchText);
-  }
-
-  constructor() {
-    // this.rideDetails = this.searchRide.value as SearchRide;
   }
 
   openCalender() {
@@ -186,13 +195,34 @@ export class SearchComponent implements OnInit, OnDestroy {
   }
 
   getRides() {
-    console.log(this.searchRide.value);
+    if (this.fromRef && typeof this.searchRide.value.leavingFrom === 'string') {
+      this.fromRef.nativeElement.focus();
+      return;
+    } else if (
+      this.toRef &&
+      typeof this.searchRide.value.goingTo === 'string'
+    ) {
+      this.toRef.nativeElement.focus();
+      return;
+    }
+    console.log("search ride data :", this.searchRide.value);
+    console.log("typeof prsnCount :", typeof this.searchRide.value.prsnCount);
+    console.log("typeof date :", typeof this.searchRide.value.date);
+    this.rideService.getRides(this.searchRide.value).subscribe({
+      next: (res) => {
+        console.log("search ride data :", res);
+      },
+      error: (err) => {
+        console.log("search ride error :", err);
+      }
+    });
   }
 
   showDropDown(dropDown: string) {
     console.log('this.searchInput :', this.searchInput.value);
     if (this.searchInput.value === '') return;
     if (dropDown === 'goingTo') {
+      console.log('dropDown :', dropDown);
       this.isLeavingFromDropDownOpen = false;
       this.isGoingToDropDownOpen = true;
     } else {
