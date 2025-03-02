@@ -87,17 +87,6 @@ export class SearchComponent implements OnInit, OnDestroy, AfterViewInit {
             place: 'We could not find that place.',
           },
         ];
-        // if (res.length) {
-        //   this.locationIqServcie
-        //     .getLocationDetails(res[0].lat, res[0].lon)
-        //     .subscribe((res: any) => {
-        //       console.log('res :', res);
-        //       console.log('address :', res.address);
-        //       console.log('city :', res.address.city);
-        //       console.log('state :', res.address.state);
-        //       console.log('country :', res.address.country);
-        //     });
-        // }
         const result: SearchData[] = res.slice(0, 5).map((val: any) => {
           return {
             place: val.display_name,
@@ -106,17 +95,9 @@ export class SearchComponent implements OnInit, OnDestroy, AfterViewInit {
           };
         });
         if (this.isLeavingFromDropDownOpen) {
-          if (result.length) {
-            this.leavingFromData = result;
-          } else {
-            this.leavingFromData = searchNotFound;
-          }
+          this.leavingFromData = result.length ? result : searchNotFound;
         } else if (this.isGoingToDropDownOpen) {
-          if (result.length) {
-            this.goingToData = result;
-          } else {
-            this.goingToData = searchNotFound;
-          }
+          this.goingToData = result.length ? result : searchNotFound;
         }
       });
   }
@@ -205,16 +186,16 @@ export class SearchComponent implements OnInit, OnDestroy, AfterViewInit {
       this.toRef.nativeElement.focus();
       return;
     }
-    console.log("search ride data :", this.searchRide.value);
-    console.log("typeof prsnCount :", typeof this.searchRide.value.prsnCount);
-    console.log("typeof date :", typeof this.searchRide.value.date);
+    console.log('search ride data :', this.searchRide.value);
+    console.log('typeof prsnCount :', typeof this.searchRide.value.prsnCount);
+    console.log('typeof date :', typeof this.searchRide.value.date);
     this.rideService.getRides(this.searchRide.value).subscribe({
       next: (res) => {
-        console.log("search ride data :", res);
+        console.log('search ride data :', res);
       },
       error: (err) => {
-        console.log("search ride error :", err);
-      }
+        console.log('search ride error :', err);
+      },
     });
   }
 
