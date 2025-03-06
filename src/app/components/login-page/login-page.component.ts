@@ -39,6 +39,7 @@ export class LoginPageComponent implements OnInit {
     private userService: UserService
   ) { }
 
+  // We can also use FormBuilder here, instead of FormGroup
   initializeForms() {
     this.signupData = new FormGroup(
       {
