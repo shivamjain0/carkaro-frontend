@@ -133,11 +133,11 @@ export class SearchComponent implements OnInit, OnDestroy, AfterViewInit {
     this.locationIqServcie
       .getLocationDetails(Number(address.lat), Number(address.lon))
       .subscribe((res: any) => {
-        console.log('res :', res);
-        console.log('address :', res.address);
-        console.log('city :', res.address.city);
-        console.log('state :', res.address.state);
-        console.log('state_district :', res.address.state_district);
+        // console.log('res :', res);
+        // console.log('address :', res.address);
+        // console.log('city :', res.address.city);
+        // console.log('state :', res.address.state);
+        // console.log('state_district :', res.address.state_district);
 
         address.city = res.address?.city;
         address.state = res.address?.state;
@@ -147,13 +147,17 @@ export class SearchComponent implements OnInit, OnDestroy, AfterViewInit {
 
   onSearchLeavingFrom(event: any) {
     const searchText = event.target.value;
-    if (searchText) this.isLeavingFromDropDownOpen = true;
+    if (searchText) {
+      this.isLeavingFromDropDownOpen = true;
+    }
     this.searchInput.next(searchText);
   }
 
   onSearchGoingTo(event: any) {
     const searchText = event.target.value;
-    if (searchText) this.isGoingToDropDownOpen = true;
+    if (searchText) {
+      this.isGoingToDropDownOpen = true;
+    }
     this.searchInput.next(searchText);
   }
 
@@ -200,10 +204,10 @@ export class SearchComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   showDropDown(dropDown: string) {
-    console.log('this.searchInput :', this.searchInput.value);
+    // console.log('this.searchInput :', this.searchInput.value);
     if (this.searchInput.value === '') return;
     if (dropDown === 'goingTo') {
-      console.log('dropDown :', dropDown);
+      // console.log('dropDown :', dropDown);
       this.isLeavingFromDropDownOpen = false;
       this.isGoingToDropDownOpen = true;
     } else {

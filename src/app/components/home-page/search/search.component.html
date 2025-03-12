@@ -6,6 +6,7 @@
       <div class="form-group">
         <label for="from">Leaving From:</label>
         <div class="search-container leavingFromDropDown">
+          <!-- (change)="onSearchLeavingFrom($event)" -->
           <input
             type="text"
             formControlName="leavingFrom"
@@ -33,6 +34,7 @@
       <div class="form-group">
         <label for="to">Going To:</label>
         <div class="search-container goingToDropDown">
+          <!-- (change)="onSearchGoingTo($event)" -->
           <input
             type="text"
             formControlName="goingTo"
@@ -41,7 +43,6 @@
             #to 
             tabindex="0"
             (input)="onSearchGoingTo($event)"
-            (change)="onSearchGoingTo($event)"
             (focus)="showDropDown('goingTo')"
             [value]="searchRide.get('goingTo')?.value?.place || ''"
             required

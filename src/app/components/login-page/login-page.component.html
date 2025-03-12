@@ -1,36 +1,6 @@
 <app-home-page></app-home-page>
 
-<h2>Enter your task :-</h2>
-<div style="display: flex; width: 500px; gap: 10px; margin-bottom: 20px">
-  <input type="text" [(ngModel)]="val" (keydown.enter)="addTask()" />
-  <button (click)="addTask()">Add</button>
-</div>
-<!-- ; trackby: trackByIndex -->
-<div
-  *ngFor="let item of task; let i = index; trackBy: trackByIndex"
-  style="display: flex; align-items: center; padding-bottom: 10px"
->
-  {{ i + 1 }}.
-  <label *ngIf="editInd !== i" style="margin-left: 10px">
-    {{ item | uppercase }}
-  </label>
-  <input
-    style="margin-left: 10px; width: 400px"
-    *ngIf="editInd === i"
-    [(ngModel)]="editVal"
-    (keydown.enter)="save()"
-  />
-
-  <div *ngIf="editInd !== i">
-    <button style="margin-left: 10px" (click)="deleteTask(i)">Delete</button>
-    <button style="margin-left: 10px" (click)="editTask(i)">Edit</button>
-  </div>
-  <div *ngIf="editInd === i">
-    <button style="margin-left: 10px" (click)="save()">Save</button>
-    <button style="margin-left: 10px" (click)="cancel()">Cancel</button>
-  </div>
-</div>
-<!-- <body>
+<body>
   <div class="container">
     <div class="nav-tabs">
       <button
@@ -196,4 +166,4 @@
       </form>
     </div>
   </div>
-</body> -->
+</body>
