@@ -42,6 +42,7 @@ export class SearchComponent implements OnInit, OnDestroy, AfterViewInit {
 
   constructor(private rideService: RideService) {
     // this.rideDetails = this.searchRide.value as SearchRide;
+    
   }
 
   ngAfterViewInit(): void {
