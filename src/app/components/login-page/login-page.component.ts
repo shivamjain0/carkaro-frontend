@@ -143,6 +143,7 @@ export class LoginPageComponent implements OnInit {
         complete: () => {
           this.route.navigate(['login'], { queryParams: { isLogin: true } });
           alert('User created successfully');
+          
         },
       });
     }
