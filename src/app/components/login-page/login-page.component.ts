@@ -109,17 +109,25 @@ export class LoginPageComponent implements OnInit {
   login() {
     const loginData = this.loginData.value;
     if (this.loginData.valid) {
-      this.userService
-        .login(loginData.email, loginData.password)
-        .subscribe((res: boolean) => {
-          console.log('is valid user :', res, typeof res);
-          if (res) {
-            localStorage.setItem('isLogin', String(res));
-            this.route.navigateByUrl('homePage/search');
-          } else {
+      this.userService.login(loginData.email, loginData.password).subscribe({
+          next: (res) => {
+            if (res) {
+              this.errMsg['login'] = '';
+              console.log('Login successful:', res);
+              localStorage.setItem('isLogin', String(res));
+              this.route.navigateByUrl('homePage/search');
+            } else {
+              this.errMsg['login'] = 'Login failed. Try again.';
+              alert('Invalid email/password');
+            }
+          },
+          error: (err) => {
+            console.error('Login error:', err);
+            this.errMsg['login'] = err?.message || 'Login failed. Try again.';
             alert('Invalid email/password');
-          }
-        });
+          },
+        }
+      );
     } else {
       alert('Invalid email/password');
     }
@@ -143,7 +151,6 @@ export class LoginPageComponent implements OnInit {
         complete: () => {
           this.route.navigate(['login'], { queryParams: { isLogin: true } });
           alert('User created successfully');
-          
         },
       });
     }
@@ -155,9 +162,10 @@ export class LoginPageComponent implements OnInit {
       : this.signupData.controls[field];
     if (control.errors) {
       if (control.errors['required']) return `Required field`;
-      if (control.errors[field] || control.errors['pattern'])
+      else if (control.errors[field] || control.errors['pattern'])
         return 'Invalid field format';
-      if (control.errors['passwordMismatch']) return 'Password mismatch';
+      else if (control.errors['passwordMismatch']) return 'Password mismatch';
+      else if (control.errors['emailExists']) return 'Email already exists';
     }
     return '';
   }
